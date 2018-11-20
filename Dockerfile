@@ -1,6 +1,6 @@
 FROM php:7.1-fpm
 
-MAINTAINER Cristian B. Santos <cbsan.dev@gmail.com>
+LABEL maintainer="Cristian B. Santos <cbsan.dev@gmail.com>"
 
 LABEL description="Oficial pack php 7.1-fpm for projects with use of sybase16"
 
