@@ -1,26 +1,28 @@
-FROM php:7.1-fpm
+FROM php:7.3-fpm
 
-MAINTAINER Cristian B. Santos <cbsan.dev@gmail.com>
-
-LABEL description="Oficial pack php 7.1-fpm for projects with use of sybase16"
+LABEL maintainer Cristian B. Santos <cbsan.dev@gmail.com>
+LABEL description="Environment PHP-7.3 with sybase 16"
 
 RUN set -xe \
 	&& DEP_BUILD="\
-		git \
-		build-essential \
-		automake \
-		bison \
-		flex \
-		libtool \
-		re2c" \
+	git \
+	build-essential \
+	automake \
+	bison \
+	flex \
+	libtool \
+	unzip \
+	re2c" \
 	&& apt update && apt update \
 	&& apt install -y $DEP_BUILD --no-install-recommends --no-install-suggests \
+	&& mkdir -p /tmp/sdk \
 	&& mkdir -p /opt/sqlanywhere16 \
 	&& cd /tmp \
-	&& git clone -b php-7.1 --depth 1 https://github.com/cbsan/sdk-sqlanywhere-php.git sdk \
+	&& curl -fSL https://s3.amazonaws.com/sqlanywhere/drivers/php/sasql_php.zip -o ./sdk/sasql_php.zip \
+	&& git clone --depth 1 https://github.com/cbsan/sdk-sqlanywhere-php.git dep_sdk \
+	&& cp -r ./dep_sdk/dep_lib/* /opt/sqlanywhere16 \
 	&& cd ./sdk \
-	&& tar -xvzf dep.tar.gz --strip=1 -C /opt/sqlanywhere16 \
-	&& tar -xvzf sasql_php.tar.gz \
+	&& unzip sasql_php.zip \
 	&& phpize \
 	&& ./configure --with-sqlanywhere \
 	&& make \
